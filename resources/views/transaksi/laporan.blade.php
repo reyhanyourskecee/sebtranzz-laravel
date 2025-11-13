@@ -1,4 +1,4 @@
-@extends('layout.main')
+@extends('layout.app')
 
 @section('title', 'Laporan Transaksi')
 
@@ -35,9 +35,10 @@
                         <td>{{ $t->items->sum('jumlah') }}</td>
                         <td>Rp {{ number_format($t->total, 0, ',', '.') }}</td>
                         <td>
-                            <button class="btn btn-sm btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#detail{{ $t->id }}">
-                                Selengkapnya
-                            </button>
+                            <a href="{{ route('laporan.detail', $t->id) }}" class="btn btn-sm btn-info">
+                                    Selengkapnya
+                             </a>
+
                         </td>
                     </tr>
 

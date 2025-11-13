@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -8,7 +9,7 @@
 
     <style>
         body {
-            background-color: #f8f1de;
+            background-color:   #f0e2d0;
             font-family: 'Poppins', sans-serif;
         }
         .navbar {
@@ -19,20 +20,34 @@
             font-weight: 500;
         }
         .navbar a.active {
-            background-color: rgba(0,0,0,0.2);
+            background-color: rgba(0, 0, 0, 0.2);
             border-radius: 10px;
         }
         table th {
-            background-color: #e95420 !important;
+            background-color: #b4461b  !important;    
             color: white;
         }
         .btn-next {
-            background-color: #e95420;
+            background-color: #096e04ff;
             color: white;
             padding: 8px 20px;
             border-radius: 20px;
             border: none;
         }
+        .btn-orange {
+    background-color: #16801dff;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 20px;
+    font-weight: 500;
+    transition: 0.3s;
+}
+.btn-orange:hover {
+    background-color: #8b948cff;
+    color: white;
+}
+
     </style>
 </head>
 <body>

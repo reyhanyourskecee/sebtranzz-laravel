@@ -109,8 +109,9 @@ class TransaksiController extends Controller
 
     public function detail($id)
 {
-    $transaksi = Transaksi::with('items.bahanbaku')->findOrFail($id);
+    $transaksi = \App\Models\Transaksi::with('items.bahanbaku')->findOrFail($id);
     return view('transaksi.detail', compact('transaksi'));
 }
+
 
 }

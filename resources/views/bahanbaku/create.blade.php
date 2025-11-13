@@ -31,35 +31,55 @@
 
 <div class="container mt-5">
     <div class="card p-4 shadow-sm">
-        <h4 class="fw-bold mb-3">Tambah Bahan Baku</h4>
+        <h4 class="fw-bold mb-3 text-center">Tambah Bahan Baku</h4>
+
         <form action="{{ route('bahanbaku.store') }}" method="POST">
             @csrf
+
+            <!-- Nama -->
             <div class="mb-3">
                 <label class="form-label">Nama Bahan</label>
                 <input type="text" name="nama" class="form-control" required>
             </div>
-            <div>
-    <label for="stok">Stok</label>
-    <input type="number" name="stok" id="stok" class="form-control" required>
-</div>
 
+            <!-- Stok -->
+            <div class="mb-3">
+                <label class="form-label">Stok</label>
+                <input type="number" name="stok" class="form-control" required>
+            </div>
+
+            <!-- Harga -->
             <div class="mb-3">
                 <label class="form-label">Harga</label>
-                <input type="number" name="harga" class="form-control">
+                <input type="number" name="harga" class="form-control" required>
             </div>
+
+            <!-- Status -->
             <div class="mb-3">
                 <label class="form-label">Status</label>
-                <input type="text" name="status" class="form-control">
+                <select name="status" class="form-select" required>
+                    <option value="">-- Pilih Status --</option>
+                    <option value="Tersedia">Tersedia</option>
+                    <option value="Habis">Habis</option>
+                </select>
             </div>
+
+            <!-- Satuan Harga -->
+            <div class="mb-3">
+                <label class="form-label">Satuan Harga</label>
+                <select name="satuan_harga" class="form-select" required>
+                    <option value="">-- Pilih Satuan --</option>
+                    <option value="/plastik">/plastik</option>
+                    <option value="/kg">/kg</option>
+                    <option value="/pcs">/pcs</option>
+                </select>
+            </div>
+
+            <!-- Tombol -->
             <div class="d-flex justify-content-between">
                 <a href="{{ route('bahanbaku.index') }}" class="btn btn-secondary">Kembali</a>
                 <button type="submit" class="btn btn-orange">Simpan</button>
             </div>
-            <div class="form-group">
-    <label for="satuan_harga">Satuan Harga (contoh: /plastik, /kg, /pcs)</label>
-    <input type="text" class="form-control" id="satuan_harga" name="satuan_harga" placeholder="/pcs" required>
-</div>
-
         </form>
     </div>
 </div>
