@@ -19,22 +19,35 @@ class TransaksiController extends Controller
         return view('transaksi.index', compact('bahanbakus'));
     }
     public function konfirmasi(Request $request)
+{
+    $items = $request->input('items', []);
 
-    {
-        $items = $request->input('items', []);
+    $detailItems = [];
+    $totalHarga = 0;
 
-        // Hitung total harga
-        $totalHarga = 0;
-        foreach ($items as $item) {
-            $bahan = Bahanbaku::find($item['id']);
-            if ($bahan) {
-                $totalHarga += $bahan->harga * $item['jumlah'];
-            }
+    foreach ($items as $item) {
+        $bahan = Bahanbaku::find($item['id']);
+        if ($bahan) {
+            $subtotal = $bahan->harga * $item['jumlah'];
+
+            $detailItems[] = [
+                'id'        => $bahan->id,
+                'nama'      => $bahan->nama,
+                'qty'       => $item['jumlah'],
+                'harga'     => $bahan->harga,
+                'subtotal'  => $subtotal,
+            ];
+
+            $totalHarga += $subtotal;
         }
-
-        return view('transaksi.konfirmasi', compact('items', 'totalHarga'));
-
     }
+
+    return view('transaksi.konfirmasi', [
+        'items' => $detailItems,
+        'totalHarga' => $totalHarga
+    ]);
+}
+
 
     public function selesai(Request $request)
 {

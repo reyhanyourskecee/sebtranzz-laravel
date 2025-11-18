@@ -22,6 +22,7 @@ Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi
 Route::post('/transaksi/konfirmasi', [TransaksiController::class, 'konfirmasi'])->name('transaksi.konfirmasi');
 Route::post('/transaksi/selesai', [TransaksiController::class, 'selesai'])->name('transaksi.selesai');
 
+
 Route::get('/laporan', [TransaksiController::class, 'laporan'])->name('laporan.transaksi');
 Route::post('/laporan', [TransaksiController::class, 'filter'])->name('laporan.filter');
 Route::get('/laporan/{id}', [TransaksiController::class, 'detail'])->name('transaksi.detail');

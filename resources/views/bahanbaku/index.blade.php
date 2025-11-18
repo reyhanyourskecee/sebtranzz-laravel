@@ -10,16 +10,17 @@
     </div>
     
     <table class="table table-bordered align-middle">
-        <thead class="table-warning text-center">
-            <tr>
-                <th>No</th>
-                <th>Nama</th>
-                <th>Stok</th>
-                <th>Harga Satuan</th>
-                <th>Status</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
+    <thead class="table-warning text-center" style="color: white;">
+        <tr>
+            <th>No</th>
+            <th>Nama</th>
+            <th>Stok</th>
+            <th>Harga Satuan</th>
+            <th>Status</th>
+            <th>Aksi</th>
+        </tr>
+    </thead>
+
         <tbody>
             @forelse ($bahanbakus as $i => $bahan)
                 <tr>
