@@ -12,7 +12,7 @@
     <table class="table table-bordered align-middle">
     <thead class="table-warning text-center" style="color: white;">
         <tr>
-            <th>No</th>
+            <th>No.</th>
             <th>Nama</th>
             <th>Stok</th>
             <th>Harga Satuan</th>
