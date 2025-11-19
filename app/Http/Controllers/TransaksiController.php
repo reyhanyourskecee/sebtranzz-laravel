@@ -10,121 +10,162 @@ use Illuminate\Support\Facades\DB;
 
 class TransaksiController extends Controller
 {
+    // ===============================
+    // HALAMAN INPUT TRANSAKSI
+    // ===============================
     public function index()
     {
-        // Ambil semua bahan baku dari tabel 'bahanbakus'
-        $bahanbakus = DB::table('bahanbakus')->get();
-
-        // Kirim ke view
+        $bahanbakus = Bahanbaku::all();
         return view('transaksi.index', compact('bahanbakus'));
     }
+
+    // ===============================
+    // HALAMAN KONFIRMASI
+    // ===============================
     public function konfirmasi(Request $request)
-{
-    $items = $request->input('items', []);
+    {
+        $items = $request->input('items', []);
 
-    $detailItems = [];
-    $totalHarga = 0;
+        // Filter item jumlah > 0
+        $items = array_filter($items, function ($item) {
+            return isset($item['jumlah']) && $item['jumlah'] > 0;
+        });
 
-    foreach ($items as $item) {
-        $bahan = Bahanbaku::find($item['id']);
-        if ($bahan) {
+        // WAJIB: reindex array !!!
+        $items = array_values($items);
+
+        $detailItems = [];
+        $totalHarga = 0;
+
+        foreach ($items as $item) {
+
+            $bahan = Bahanbaku::find($item['id']);
+            if (!$bahan)
+                continue;
+
             $subtotal = $bahan->harga * $item['jumlah'];
 
             $detailItems[] = [
-                'id'        => $bahan->id,
-                'nama'      => $bahan->nama,
-                'qty'       => $item['jumlah'],
-                'harga'     => $bahan->harga,
-                'subtotal'  => $subtotal,
+                'id' => $bahan->id,
+                'nama' => $bahan->nama,
+                'jumlah' => $item['jumlah'],
+                'harga' => $bahan->harga,
+                'subtotal' => $subtotal,
             ];
 
             $totalHarga += $subtotal;
         }
+
+        return view('transaksi.konfirmasi', [
+            'items' => $detailItems,
+            'totalHarga' => $totalHarga
+        ]);
     }
 
-    return view('transaksi.konfirmasi', [
-        'items' => $detailItems,
-        'totalHarga' => $totalHarga
-    ]);
-}
-
-
+    // ===============================
+    // PROSES SELESAI TRANSAKSI
+    // ===============================
     public function selesai(Request $request)
-{
-    $items = $request->input('items', []);
+    {
 
-    try {
-        DB::beginTransaction();
+        $items = $request->input('items', []);
 
-        // 1️⃣ Hitung total harga semua item
-        $totalHarga = 0;
-        foreach ($items as $item) {
-            $bahan = Bahanbaku::find($item['id']);
-            if ($bahan) {
-                $totalHarga += $bahan->harga * $item['jumlah'];
-            }
+        // Filter & reindex
+        $items = array_filter($items, function ($item) {
+            return isset($item['jumlah']) && $item['jumlah'] > 0;
+        });
+
+        $items = array_values($items); // PENTING
+
+        if (count($items) == 0) {
+            return back()->with('error', 'Tidak ada item yang dipilih.');
         }
 
-        // 2️⃣ Simpan ke tabel transaksis
-        $transaksi = new Transaksi();
-        $transaksi->tanggal = now();
-        $transaksi->total = $totalHarga;
-        $transaksi->save();
+        try {
 
-        // 3️⃣ Simpan item-item transaksi ke tabel transaksi_items
-        foreach ($items as $item) {
-            $bahan = Bahanbaku::find($item['id']);
-            if ($bahan) {
-                // Kurangi stok bahan
-                $bahan->stok -= $item['jumlah'];
-                if ($bahan->stok < 0) {
-                    $bahan->stok = 0;
+            DB::beginTransaction();
+
+            // Hitung total
+            $totalHarga = 0;
+
+            foreach ($items as $item) {
+                $bahan = Bahanbaku::find($item['id']);
+                if ($bahan) {
+                    $totalHarga += $bahan->harga * $item['jumlah'];
                 }
+            }
+
+            // Simpan transaksi
+            $transaksi = Transaksi::create([
+                'tanggal' => now(),
+                'total' => $totalHarga,
+            ]);
+
+            // Simpan item + kurangi stok
+            foreach ($items as $item) {
+
+                $bahan = Bahanbaku::find($item['id']);
+                if (!$bahan)
+                    continue;
+
+                // Kurangi stok
+                $bahan->stok -= $item['jumlah'];
+                $bahan->stok = max($bahan->stok, 0);
                 $bahan->save();
 
                 // Simpan item transaksi
-                $transaksiItem = new TransaksiItem();
-                $transaksiItem->transaksi_id = $transaksi->id;
-                $transaksiItem->bahanbaku_id = $bahan->id;
-                $transaksiItem->jumlah = $item['jumlah'];
-                $transaksiItem->subtotal = $bahan->harga * $item['jumlah'];
-                $transaksiItem->save();
+                TransaksiItem::create([
+                    'transaksi_id' => $transaksi->id,
+                    'bahanbaku_id' => $bahan->id,
+                    'nama_barang' => $bahan->nama,      // gunakan kolom yg sudah ada
+                    'harga_satuan' => $bahan->harga,     // gunakan kolom yg sudah ada
+                    'jumlah' => $item['jumlah'],
+                    'subtotal' => $bahan->harga * $item['jumlah'],
+                ]);
             }
+
+            DB::commit();
+
+            return redirect()
+                ->route('laporan.transaksi')
+                ->with('success', 'Transaksi berhasil disimpan!');
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
-
-        DB::commit();
-
-        return redirect()->route('bahanbaku.index')->with('success', 'Transaksi selesai dan tersimpan!');
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
     }
-}
 
-
+    // ===============================
+    // LAPORAN TRANSAKSI
+    // ===============================
     public function laporan()
-{
-    $transaksis = \App\Models\Transaksi::with('items.bahanbaku')->get();
-    return view('transaksi.laporan', compact('transaksis'));
-}
+    {
+        $transaksis = Transaksi::with('items.bahanbaku')
+            ->orderBy('id', 'DESC')
+            ->get();
 
+        return view('transaksi.laporan', compact('transaksis'));
+    }
 
     public function filter(Request $request)
-{
-    $tanggal = $request->tanggal;
+    {
+        $tanggal = $request->tanggal;
 
-    $transaksis = \App\Models\Transaksi::whereDate('created_at', $tanggal)
-        ->with('items.bahanbaku')
-        ->get();
+        $transaksis = Transaksi::whereDate('tanggal', $tanggal)
+            ->with('items.bahanbaku')
+            ->get();
 
-    return view('transaksi.laporan', compact('transaksis', 'tanggal'));
-}
+        return view('transaksi.laporan', compact('transaksis', 'tanggal'));
+    }
 
+    // ===============================
+    // DETAIL TRANSAKSI
+    // ===============================
     public function detail($id)
-{
-    $transaksi = \App\Models\Transaksi::with('items.bahanbaku')->findOrFail($id);
-    return view('transaksi.detail', compact('transaksi'));
-}
-
-
+    {
+        $transaksi = Transaksi::with('items.bahanbaku')->findOrFail($id);
+        return view('transaksi.detail', compact('transaksi'));
+    }
 }

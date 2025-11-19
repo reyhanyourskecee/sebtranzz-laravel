@@ -12,8 +12,8 @@ class Transaksi extends Model
     protected $fillable = ['tanggal', 'total'];
 
     public function items()
-{
-    return $this->hasMany(TransaksiItem::class, 'transaksi_id');
+    {
+        return $this->hasMany(TransaksiItem::class, 'transaksi_id');
+    }
 }
-        
-}
+

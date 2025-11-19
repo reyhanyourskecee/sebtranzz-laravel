@@ -1,65 +1,86 @@
 @extends('layout.app')
 
 @section('content')
-<div class="container mt-5">
 
-    <div class="card shadow-lg border-0">
-        <div class="card-header bg-orange text-white text-center py-3">
-            <h3 class="mb-0">Konfirmasi Transaksi</h3>
-        </div>
+@if(session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
 
-        <table class="table table-bordered table-striped text-center">
-            <thead class="table-dark">
-                <tr>
-                    <th>No</th>
-                    <th>Nama Barang</th>
-                    <th>Jumlah</th>
-                    <th>Harga Satuan</th>
-                    <th>Subtotal</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($items as $i => $item)
+    <div class="container mt-5">
+
+        <div class="card shadow-lg border-0">
+
+            {{-- Header --}}
+            <div class="card-header bg-orange text-white text-center py-3">
+                <h3 class="mb-0">Konfirmasi Transaksi</h3>
+            </div>
+
+            {{-- Table --}}
+            <table class="table table-bordered table-striped align-middle">
+                <thead class="table-dark text-center">
                     <tr>
-                        <td>{{ $i+1 }}</td>
-                        <td>{{ $item['nama'] }}</td>
-                        <td>{{ $item['qty'] }}</td>
-                        <td>Rp {{ number_format($item['harga'], 0, ',', '.') }}</td>
-                        <td>Rp {{ number_format($item['qty'] * $item['harga'], 0, ',', '.') }}</td>
+                        <th style="width: 60px;">No</th>
+                        <th class="text-start">Nama Barang</th>
+                        <th style="width: 120px;">Jumlah</th>
+                        <th style="width: 180px;">Harga Satuan</th>
+                        <th style="width: 180px;">Subtotal</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </thead>
 
-        <div class="text-end mt-4">
-            <h4><strong>Total Harga: Rp {{ number_format($totalHarga, 0, ',', '.') }}</strong></h4>
-        </div>
+                <tbody>
+                    @foreach($items as $i => $item)
+                        @if($item['jumlah'] > 0)
+                            <tr>
+                                <td class="text-center">{{ $i + 1 }}</td>
+                                <td class="text-start">{{ $item['nama'] }}</td>
+                                <td class="text-center">{{ $item['jumlah'] }}</td>
+                                <td class="text-end">Rp {{ number_format($item['harga'], 0, ',', '.') }}</td>
+                                <td class="text-end fw-bold">
+                                    Rp {{ number_format($item['jumlah'] * $item['harga'], 0, ',', '.') }}
+                                </td>
+                            </tr>
+                        @endif
+                    @endforeach
 
-        <div class="text-center mt-4">
+                </tbody>
+            </table>
 
-            {{-- FORM POST untuk menyelesaikan transaksi --}}
-           <form action="{{ route('transaksi.selesai') }}" method="POST" class="text-center mt-4">
-    @csrf
+            {{-- Total Harga --}}
+            <div class="text-end pe-4 mb-4">
+                <h4 class="fw-bold mb-0">
+                    Total Harga:
+                    <span class="text-success">
+                        Rp {{ number_format($totalHarga, 0, ',', '.') }}
+                    </span>
+                </h4>
+            </div>
 
-    @foreach($items as $i => $item)
-        <input type="hidden" name="items[{{ $i }}][id]" value="{{ $item['id'] }}">
-        <input type="hidden" name="items[{{ $i }}][jumlah]" value="{{ $item['qty'] }}">
-    @endforeach
+            {{-- Submit Form --}}
+            <div class="text-center pb-4">
 
-    <button type="submit" class="btn btn-success btn-lg px-5 py-2" style="border-radius: 10px;">
-        Selesaikan Transaksi
-    </button>
-</form>
+                <form action="{{ route('transaksi.selesai') }}" method="POST">
+                    @csrf
+
+                    @foreach($items as $i => $item)
+                        <input type="hidden" name="items[{{ $i }}][id]" value="{{ $item['id'] }}">
+                        <input type="hidden" name="items[{{ $i }}][jumlah]" value="{{ $item['jumlah'] }}">
+
+                    @endforeach
+
+                    <button type="submit" class="btn btn-success">Selesaikan Transaksi</button>
+                </form>
+
+            </div>
 
         </div>
     </div>
 
-</div>
-
-<style>
-    .bg-orange {
-        background-color: #e85d04 !important;
-    }
-</style>
+    <style>
+        .bg-orange {
+            background-color: #e85d04 !important;
+        }
+    </style>
 
 @endsection

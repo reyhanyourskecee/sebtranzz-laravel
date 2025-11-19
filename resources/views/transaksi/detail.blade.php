@@ -25,16 +25,18 @@
             @php $total = 0; @endphp
             @foreach ($transaksi->items as $i => $item)
                 @php 
-                    $subtotal = $item->bahanbaku->harga * $item->jumlah; 
+                    $harga = $item->bahanbaku->harga ?? 0;
+$subtotal = $harga * $item->jumlah;
+
                     $total += $subtotal; 
                 @endphp
                 <tr>
                     <td>{{ $i + 1 }}</td>
-                    <td>{{ $item->bahanbaku->nama }}</td>
-                    <td>{{ $item->jumlah }}</td>
-                    <td>Rp {{ number_format($item->bahanbaku->harga, 0, ',', '.') }}</td>
-                    <td>Rp {{ number_format($subtotal, 0, ',', '.') }}</td>
-                </tr>
+                    <td>{{ $item->bahanbaku->nama ?? '-' }}</td>
+<td>{{ $item->jumlah }}</td>
+<td>Rp {{ number_format($harga, 0, ',', '.') }}</td>
+<td>Rp {{ number_format($subtotal, 0, ',', '.') }}</td>
+
             @endforeach
             <tr class="table-light">
                 <td colspan="4" class="text-end"><strong>Total</strong></td>

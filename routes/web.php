@@ -17,19 +17,25 @@ Route::get('/bahanbaku/edit/{id}', [BahanBakuController::class, 'edit'])->name('
 Route::post('/bahanbaku/update/{id}', [BahanBakuController::class, 'update'])->name('bahanbaku.update');
 Route::delete('/bahanbaku/delete/{id}', [BahanBakuController::class, 'destroy'])->name('bahanbaku.destroy');
 
-// TRANSAKSI
+//transaksi
+// Input transaksi
 Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi.index');
-Route::post('/transaksi/konfirmasi', [TransaksiController::class, 'konfirmasi'])->name('transaksi.konfirmasi');
+
+Route::match(['get', 'post'], '/transaksi/konfirmasi', [TransaksiController::class, 'konfirmasi'])
+    ->name('transaksi.konfirmasi');
+
+// Selesaikan transaksi
 Route::post('/transaksi/selesai', [TransaksiController::class, 'selesai'])->name('transaksi.selesai');
 
+// Laporan transaksi
+Route::get('/laporan/transaksi', [TransaksiController::class, 'laporan'])->name('laporan.transaksi');
 
-Route::get('/laporan', [TransaksiController::class, 'laporan'])->name('laporan.transaksi');
-Route::post('/laporan', [TransaksiController::class, 'filter'])->name('laporan.filter');
-Route::get('/laporan/{id}', [TransaksiController::class, 'detail'])->name('transaksi.detail');
-Route::get('/transaksi/detail/{id}', [TransaksiController::class, 'detail'])->name('transaksi.detail');
 
 
 // LAPORAN
 Route::get('/laporan', [TransaksiController::class, 'laporan'])->name('laporan.transaksi');
-Route::post('/laporan', [TransaksiController::class, 'filter'])->name('laporan.filter');
-Route::get('/laporan/{id}', [TransaksiController::class, 'detail'])->name('laporan.detail');
+Route::post('/laporan/filter', [TransaksiController::class, 'filter'])->name('laporan.filter');
+Route::get('/laporan/detail/{id}', [TransaksiController::class, 'detail'])->name('laporan.detail');
+
+
+

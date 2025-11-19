@@ -32,7 +32,8 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ \Carbon\Carbon::parse($t->tanggal)->format('d/m/Y H:i') }}</td>
-                        <td>{{ $t->items->sum('jumlah') }}</td>
+                        <td>{{ $t->items?->sum('jumlah') ?? 0 }}</td>
+
                         <td>Rp {{ number_format($t->total, 0, ',', '.') }}</td>
                         <td>
                             <a href="{{ route('laporan.detail', $t->id) }}" class="btn btn-sm btn-info">
@@ -43,30 +44,31 @@
                     </tr>
 
                     {{-- Detail transaksi (collapse) --}}
-                    <tr class="collapse" id="detail{{ $t->id }}">
-                        <td colspan="5">
-                            <table class="table table-sm table-bordered mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Nama Bahan</th>
-                                        <th>Jumlah</th>
-                                        <th>Subtotal</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($t->items as $i => $item)
-                                        <tr>
-                                            <td>{{ $i + 1 }}</td>
-                                            <td>{{ $item->bahanbaku->nama }}</td>
-                                            <td>{{ $item->jumlah }}</td>
-                                            <td>Rp {{ number_format($item->subtotal, 0, ',', '.') }}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </td>
+<tr class="collapse" id="detail{{ $t->id }}">
+    <td colspan="5">
+        <table class="table table-sm table-bordered mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>No</th>
+                    <th>Nama Bahan</th>
+                    <th>Jumlah</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($t->items as $i => $item)
+                    <tr>
+                        <td>{{ $i + 1 }}</td>
+                        <td>{{ $item->bahanbaku->nama ?? '-' }}</td>
+                        <td>{{ $item->jumlah }}</td>
+                        <td>Rp {{ number_format($item->subtotal, 0, ',', '.') }}</td>
                     </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </td>
+</tr>
+
                 @empty
                     <tr>
                         <td colspan="5" class="text-center">Tidak ada data transaksi</td>
