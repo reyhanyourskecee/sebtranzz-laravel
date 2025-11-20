@@ -12,11 +12,6 @@
 
         <div class="card shadow-lg border-0">
 
-            {{-- Header --}}
-            <div class="card-header bg-orange text-white text-center py-3">
-                <h3 class="mb-0">Konfirmasi Transaksi</h3>
-            </div>
-
             {{-- Table --}}
             <table class="table table-bordered table-striped align-middle">
                 <thead class="table-dark text-center">

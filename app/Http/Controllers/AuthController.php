@@ -14,7 +14,17 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        // logika login bisa kamu isi nanti
-        return redirect()->route('dashboard'); // contoh redirect
+        // logika login nanti bisa ditambahkan
+        return redirect()->route('dashboard');
+    }
+
+    // ==== INI MASUK KE DALAM CLASS ====
+    public function logout(Request $request)
+    {
+        auth()->logout(); 
+        $request->session()->invalidate(); 
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login')->with('success', 'Berhasil logout!');
     }
 }

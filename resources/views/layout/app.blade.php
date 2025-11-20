@@ -62,7 +62,17 @@
             <li class="nav-item"><a class="nav-link text-white" href="{{ route('bahanbaku.index') }}">Kelola Bahan Baku</a></li>
             <li class="nav-item"><a class="nav-link text-white" href="{{ route('transaksi.index') }}">Kelola Transaksi</a></li>
             <li class="nav-item"><a class="nav-link text-white" href="{{ route('laporan.transaksi') }}">Laporan Transaksi</a></li>
-            <li class="nav-item"><a class="nav-link text-white" href="{{ route('login') }}">Logout</a></li>
+            <li class="nav-item">
+    <a class="nav-link text-white" href="#"
+       onclick="event.preventDefault(); if(confirm('Yakin ingin logout?')) document.getElementById('logout-form').submit();">
+       Logout
+    </a>
+
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+        @csrf
+    </form>
+</li>
+
         </ul>
     </div>
 </nav>

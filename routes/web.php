@@ -38,4 +38,5 @@ Route::post('/laporan/filter', [TransaksiController::class, 'filter'])->name('la
 Route::get('/laporan/detail/{id}', [TransaksiController::class, 'detail'])->name('laporan.detail');
 
 
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
