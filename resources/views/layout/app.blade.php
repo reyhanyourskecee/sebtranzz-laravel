@@ -60,7 +60,7 @@
         <ul class="navbar-nav ms-auto">
             <li class="nav-item"><a class="nav-link text-white" href="{{ route('dashboard') }}">Dashboard</a></li>
             <li class="nav-item"><a class="nav-link text-white" href="{{ route('bahanbaku.index') }}">Kelola Bahan Baku</a></li>
-            <li class="nav-item"><a class="nav-link text-white" href="{{ route('transaksi.index') }}">Kelola Transaksi</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="{{ route('transaksi.index') }}">Transaksi</a></li>
             <li class="nav-item"><a class="nav-link text-white" href="{{ route('laporan.transaksi') }}">Laporan Transaksi</a></li>
             <li class="nav-item">
     <a class="nav-link text-white" href="#"
