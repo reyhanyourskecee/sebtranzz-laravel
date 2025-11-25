@@ -115,13 +115,14 @@ class TransaksiController extends Controller
 
                 // Simpan item transaksi
                 TransaksiItem::create([
-                    'transaksi_id' => $transaksi->id,
-                    'bahanbaku_id' => $bahan->id,
-                    'nama_barang' => $bahan->nama,      // gunakan kolom yg sudah ada
-                    'harga_satuan' => $bahan->harga,     // gunakan kolom yg sudah ada
-                    'jumlah' => $item['jumlah'],
-                    'subtotal' => $bahan->harga * $item['jumlah'],
-                ]);
+    'transaksi_id'  => $transaksi->id,
+    'bahanbaku_id'  => $bahan->id,
+    'nama_barang'   => $bahan->nama,
+    'harga_satuan'  => $bahan->harga,
+    'jumlah'        => $item['jumlah'],
+    'subtotal'      => $bahan->harga * $item['jumlah'],
+]);
+
             }
 
             DB::commit();

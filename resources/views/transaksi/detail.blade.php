@@ -22,27 +22,33 @@
             </tr>
         </thead>
         <tbody>
-            @php $total = 0; @endphp
-            @foreach ($transaksi->items as $i => $item)
-                @php 
-                    $harga = $item->bahanbaku->harga ?? 0;
-$subtotal = $harga * $item->jumlah;
+    @php $total = 0; @endphp
 
-                    $total += $subtotal; 
-                @endphp
-                <tr>
-                    <td>{{ $i + 1 }}</td>
-                    <td>{{ $item->bahanbaku->nama ?? '-' }}</td>
-<td>{{ $item->jumlah }}</td>
-<td>Rp {{ number_format($harga, 0, ',', '.') }}</td>
-<td>Rp {{ number_format($subtotal, 0, ',', '.') }}</td>
+    @foreach ($transaksi->items as $i => $item)
+        @php
+            $harga = $item->harga_satuan ?? 0;
+            $nama  = $item->nama_barang ?? '-';
 
-            @endforeach
-            <tr class="table-light">
-                <td colspan="4" class="text-end"><strong>Total</strong></td>
-                <td><strong>Rp {{ number_format($total, 0, ',', '.') }}</strong></td>
-            </tr>
-        </tbody>
+            $subtotal = $harga * $item->jumlah;
+
+            $total += $subtotal;
+        @endphp
+
+        <tr>
+            <td>{{ $i + 1 }}</td>
+            <td>{{ $nama }}</td>
+            <td>{{ $item->jumlah }}</td>
+            <td>Rp {{ number_format($harga, 0, ',', '.') }}</td>
+            <td>Rp {{ number_format($subtotal, 0, ',', '.') }}</td>
+        </tr>
+    @endforeach
+
+    <tr class="table-light">
+        <td colspan="4" class="text-end"><strong>Total</strong></td>
+        <td><strong>Rp {{ number_format($total, 0, ',', '.') }}</strong></td>
+    </tr>
+</tbody>
+
     </table>
 
     <a href="{{ route('laporan.transaksi') }}" 
