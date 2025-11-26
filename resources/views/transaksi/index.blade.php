@@ -4,7 +4,6 @@
 
 @section('content')
 <div class="container mt-4">
-    <h2>Kelola Transaksi</h2>
 
     <form action="{{ route('transaksi.konfirmasi') }}" method="POST">
         @csrf
@@ -20,11 +19,11 @@
             <tbody>
                 @foreach ($bahanbakus as $index => $item)
                     <tr>
-    <td>{{ $index + 1 }}</td>
+    <td>{{ $index + 0 }}</td>
     <td>{{ $item->nama }}</td>
 
     <td>
-        <input type="number" name="items[{{ $index }}][jumlah]" value="1"
+        <input type="number" name="items[{{ $index }}][jumlah]" value="0"
             class="form-control text-center"
             style="width: 100px; margin: auto;">
 

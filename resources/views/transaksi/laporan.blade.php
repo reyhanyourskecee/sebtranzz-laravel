@@ -4,7 +4,6 @@
 
 @section('content')
 <div class="container mt-4">
-    <h2 class="mb-3">Laporan Transaksi</h2>
 
     {{-- Filter tanggal --}}
     <form action="{{ route('laporan.filter') }}" method="POST" class="mb-3">
@@ -59,7 +58,7 @@
                 @foreach ($t->items as $i => $item)
                     <tr>
                         <td>{{ $i + 1 }}</td>
-                        <td>{{ $item->bahanbaku->nama ?? '-' }}</td>
+                        <td>{{ $item->nama_barang ?? '-' }}</td>
                         <td>{{ $item->jumlah }}</td>
                         <td>Rp {{ number_format($item->subtotal, 0, ',', '.') }}</td>
                     </tr>

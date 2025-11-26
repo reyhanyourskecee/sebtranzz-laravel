@@ -15,7 +15,7 @@ class TransaksiController extends Controller
     // ===============================
     public function index()
     {
-        $bahanbakus = Bahanbaku::all();
+        $bahanbakus = Bahanbaku::where('stok', '>', 0)->get();
         return view('transaksi.index', compact('bahanbakus'));
     }
 
@@ -141,25 +141,26 @@ class TransaksiController extends Controller
     // ===============================
     // LAPORAN TRANSAKSI
     // ===============================
-    public function laporan()
-    {
-        $transaksis = Transaksi::with('items.bahanbaku')
-            ->orderBy('id', 'DESC')
-            ->get();
+   public function laporan()
+{
+    $transaksis = Transaksi::with('items')
+        ->orderBy('id', 'DESC')
+        ->get();
 
-        return view('transaksi.laporan', compact('transaksis'));
-    }
+    return view('transaksi.laporan', compact('transaksis'));
+}
 
-    public function filter(Request $request)
-    {
-        $tanggal = $request->tanggal;
+public function filter(Request $request)
+{
+    $tanggal = $request->tanggal;
 
-        $transaksis = Transaksi::whereDate('tanggal', $tanggal)
-            ->with('items.bahanbaku')
-            ->get();
+    $transaksis = Transaksi::whereDate('tanggal', $tanggal)
+        ->with('items')
+        ->get();
 
-        return view('transaksi.laporan', compact('transaksis', 'tanggal'));
-    }
+    return view('transaksi.laporan', compact('transaksis', 'tanggal'));
+}
+
 
     // ===============================
     // DETAIL TRANSAKSI

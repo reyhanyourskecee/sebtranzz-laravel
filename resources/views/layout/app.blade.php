@@ -59,13 +59,13 @@
     <div class="collapse navbar-collapse">
         <ul class="navbar-nav ms-auto">
             <li class="nav-item"><a class="nav-link text-white" href="{{ route('dashboard') }}">Dashboard</a></li>
-            <li class="nav-item"><a class="nav-link text-white" href="{{ route('bahanbaku.index') }}">Kelola Bahan Baku</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="{{ route('bahanbaku.index') }}">Bahan Baku</a></li>
             <li class="nav-item"><a class="nav-link text-white" href="{{ route('transaksi.index') }}">Transaksi</a></li>
-            <li class="nav-item"><a class="nav-link text-white" href="{{ route('laporan.transaksi') }}">Laporan Transaksi</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="{{ route('laporan.transaksi') }}">Laporan</a></li>
             <li class="nav-item">
     <a class="nav-link text-white" href="#"
        onclick="event.preventDefault(); if(confirm('Yakin ingin logout?')) document.getElementById('logout-form').submit();">
-       Logout
+       Keluar
     </a>
 
     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
