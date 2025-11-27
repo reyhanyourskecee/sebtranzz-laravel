@@ -11,13 +11,10 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Total transaksi keluar (kelola transaksi)
         $totalTransaksi = Transaksi::count();
 
-        // Barang masuk = jumlah bahan baku baru yang dibuat hari ini
         $barangMasuk = Bahanbaku::whereDate('created_at', now()->toDateString())->count();
 
-        // Barang keluar = total item transaksi hari ini
         $barangKeluar = DB::table('transaksi_items')
             ->whereDate('created_at', now()->toDateString())
             ->sum('jumlah');

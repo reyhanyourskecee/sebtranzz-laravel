@@ -52,7 +52,6 @@
 </head>
 <body>
 
-<!-- Navbar -->
 <nav class="navbar navbar-expand-lg px-3" style="background-color: #e95420;">
     <a class="navbar-brand text-white fw-bold" href="{{ route('dashboard') }}">SEBTRANZ</a>
 

@@ -36,25 +36,21 @@
         <form action="{{ route('bahanbaku.store') }}" method="POST">
             @csrf
 
-            <!-- Nama -->
             <div class="mb-3">
                 <label class="form-label">Nama Bahan</label>
                 <input type="text" name="nama" class="form-control" required>
             </div>
 
-            <!-- Stok -->
             <div class="mb-3">
                 <label class="form-label">Stok</label>
                 <input type="number" name="stok" class="form-control" required>
             </div>
 
-            <!-- Harga -->
             <div class="mb-3">
                 <label class="form-label">Harga</label>
                 <input type="number" name="harga" class="form-control" required>
             </div>
 
-            <!-- Status -->
             <div class="mb-3">
                 <label class="form-label">Status</label>
                 <select name="status" class="form-select" required>
@@ -64,7 +60,6 @@
                 </select>
             </div>
 
-            <!-- Satuan Harga -->
             <div class="mb-3">
                 <label class="form-label">Satuan Harga</label>
                 <select name="satuan_harga" class="form-select" required>
@@ -75,7 +70,6 @@
                 </select>
             </div>
 
-            <!-- Tombol -->
             <div class="d-flex justify-content-between">
                 <a href="{{ route('bahanbaku.index') }}" class="btn btn-secondary">Kembali</a>
                 <button type="submit" class="btn btn-orange">Simpan</button>

@@ -4,12 +4,9 @@
 <div class="container mt-4">
     <h2 class="mb-4 text-center">Edit Data Bahan Baku</h2>
 
-    {{-- Pesan sukses --}}
     @if (session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
-
-    {{-- Form Update --}}
     <form action="{{ route('bahanbaku.update', $bahanbaku->id) }}" method="POST">
         @csrf
         <div class="mb-3">

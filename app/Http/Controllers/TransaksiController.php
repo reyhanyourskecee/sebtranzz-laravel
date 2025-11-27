@@ -10,28 +10,21 @@ use Illuminate\Support\Facades\DB;
 
 class TransaksiController extends Controller
 {
-    // ===============================
-    // HALAMAN INPUT TRANSAKSI
-    // ===============================
+    
     public function index()
     {
         $bahanbakus = Bahanbaku::where('stok', '>', 0)->get();
         return view('transaksi.index', compact('bahanbakus'));
     }
 
-    // ===============================
-    // HALAMAN KONFIRMASI
-    // ===============================
     public function konfirmasi(Request $request)
     {
         $items = $request->input('items', []);
 
-        // Filter item jumlah > 0
         $items = array_filter($items, function ($item) {
             return isset($item['jumlah']) && $item['jumlah'] > 0;
         });
 
-        // WAJIB: reindex array !!!
         $items = array_values($items);
 
         $detailItems = [];
@@ -62,20 +55,16 @@ class TransaksiController extends Controller
         ]);
     }
 
-    // ===============================
-    // PROSES SELESAI TRANSAKSI
-    // ===============================
     public function selesai(Request $request)
     {
 
         $items = $request->input('items', []);
 
-        // Filter & reindex
         $items = array_filter($items, function ($item) {
             return isset($item['jumlah']) && $item['jumlah'] > 0;
         });
 
-        $items = array_values($items); // PENTING
+        $items = array_values($items);
 
         if (count($items) == 0) {
             return back()->with('error', 'Tidak ada item yang dipilih.');
@@ -85,7 +74,6 @@ class TransaksiController extends Controller
 
             DB::beginTransaction();
 
-            // Hitung total
             $totalHarga = 0;
 
             foreach ($items as $item) {
@@ -95,25 +83,20 @@ class TransaksiController extends Controller
                 }
             }
 
-            // Simpan transaksi
             $transaksi = Transaksi::create([
                 'tanggal' => now(),
                 'total' => $totalHarga,
             ]);
-
-            // Simpan item + kurangi stok
             foreach ($items as $item) {
 
                 $bahan = Bahanbaku::find($item['id']);
                 if (!$bahan)
                     continue;
 
-                // Kurangi stok
                 $bahan->stok -= $item['jumlah'];
                 $bahan->stok = max($bahan->stok, 0);
                 $bahan->save();
 
-                // Simpan item transaksi
                 TransaksiItem::create([
     'transaksi_id'  => $transaksi->id,
     'bahanbaku_id'  => $bahan->id,
@@ -138,9 +121,6 @@ class TransaksiController extends Controller
         }
     }
 
-    // ===============================
-    // LAPORAN TRANSAKSI
-    // ===============================
    public function laporan()
 {
     $transaksis = Transaksi::with('items')
@@ -161,10 +141,6 @@ public function filter(Request $request)
     return view('transaksi.laporan', compact('transaksis', 'tanggal'));
 }
 
-
-    // ===============================
-    // DETAIL TRANSAKSI
-    // ===============================
     public function detail($id)
     {
         $transaksi = Transaksi::with('items.bahanbaku')->findOrFail($id);

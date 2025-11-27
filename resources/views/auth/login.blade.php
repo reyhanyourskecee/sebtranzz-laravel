@@ -58,7 +58,6 @@
 </head>
 <body>
 
-    <!-- Logo -->
     <div class="logo-container">
         <img src="{{ asset('images/sebtranz.png') }}" alt="SEBTRANZ Logo">
     </div>
@@ -70,6 +69,12 @@
                 <input type="text" name="username" class="form-control mb-3 rounded-pill text-center" placeholder="Username">
             <input type="password" name="password" class="form-control mb-3 rounded-pill text-center" placeholder="Password">
             <button type="submit" class="btn-login">MASUK</button>
+            @if(session('error'))
+    <div class="alert alert-danger text-center">
+        {{ session('error') }}
+    </div>
+@endif
+
         </form>
         </div>
     </div>

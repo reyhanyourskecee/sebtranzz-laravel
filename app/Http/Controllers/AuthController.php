@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -13,17 +12,29 @@ class AuthController extends Controller
     }
 
     public function login(Request $request)
-    {
-        // logika login nanti bisa ditambahkan
+{
+    $request->validate([
+        'username' => 'required',
+        'password' => 'required'
+    ]);
+    $allowedUsers = [
+        'raihan' => '12345',
+    ];
+    if (isset($allowedUsers[$request->username]) &&
+        $allowedUsers[$request->username] === $request->password) {
+
+        session(['logged_in' => true, 'username' => $request->username]);
+
         return redirect()->route('dashboard');
     }
+    return back()->with('error', 'Username atau password salah!');
+}
 
-    // ==== INI MASUK KE DALAM CLASS ====
+
     public function logout(Request $request)
     {
-        auth()->logout(); 
-        $request->session()->invalidate(); 
-        $request->session()->regenerateToken();
+        session()->forget(['logged_in', 'username']); 
+        session()->flush();
 
         return redirect()->route('login')->with('success', 'Berhasil logout!');
     }
