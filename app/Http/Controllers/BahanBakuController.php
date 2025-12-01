@@ -10,9 +10,9 @@ class BahanBakuController extends Controller
     
     public function index()
     {
-        
         $bahanbakus = DB::table('bahanbakus')->get();
 
+        // Perbarui status otomatis
         foreach ($bahanbakus as $bahan) {
             $status = $bahan->stok <= 0 ? 'Habis' : 'Tersedia';
             DB::table('bahanbakus')
@@ -32,15 +32,25 @@ class BahanBakuController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'nama' => 'required',
+            'stok' => 'required|integer|min:0',
+            'harga' => 'required|integer|min:0',
+        ]);
+
         $existing = DB::table('bahanbakus')->where('nama', $request->nama)->first();
 
         if ($existing) {
             $newStok = $existing->stok + $request->stok;
 
+            if ($newStok < 0) {
+                $newStok = 0;
+            }
+
             DB::table('bahanbakus')->where('id', $existing->id)->update([
                 'stok' => $newStok,
                 'harga' => $request->harga,
-                'status' => $request->status,
+                'status' => $newStok <= 0 ? 'Habis' : 'Tersedia',
                 'satuan_harga' => $request->satuan_harga,
                 'updated_at' => now(),
             ]);
@@ -49,7 +59,7 @@ class BahanBakuController extends Controller
                 'nama' => $request->nama,
                 'stok' => $request->stok,
                 'harga' => $request->harga,
-                'status' => $request->status,
+                'status' => $request->stok <= 0 ? 'Habis' : 'Tersedia',
                 'satuan_harga' => $request->satuan_harga,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -58,6 +68,8 @@ class BahanBakuController extends Controller
 
         return redirect()->route('bahanbaku.index')->with('success', 'Data berhasil disimpan!');
     }
+
+
     public function edit($id)
     {
         $bahanbaku = DB::table('bahanbakus')->where('id', $id)->first();
@@ -66,11 +78,18 @@ class BahanBakuController extends Controller
 
     public function update(Request $request, $id)
     {
+      
+        $request->validate([
+            'nama' => 'required',
+            'stok' => 'required|integer|min:0',
+            'harga' => 'required|integer|min:0',
+        ]);
+
         DB::table('bahanbakus')->where('id', $id)->update([
             'nama' => $request->nama,
             'stok' => $request->stok,
             'harga' => $request->harga,
-            'status' => $request->status,
+            'status' => $request->stok <= 0 ? 'Habis' : 'Tersedia',
             'satuan_harga' => $request->satuan_harga,
             'updated_at' => now(),
         ]);
@@ -84,3 +103,4 @@ class BahanBakuController extends Controller
         return redirect()->route('bahanbaku.index')->with('success', 'Data berhasil dihapus!');
     }
 }
+

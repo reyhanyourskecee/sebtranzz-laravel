@@ -43,12 +43,12 @@
 
             <div class="mb-3">
                 <label class="form-label">Stok</label>
-                <input type="number" name="stok" class="form-control" required>
+                <input type="number" name="stok" class="form-control" min="0" required>
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Harga</label>
-                <input type="number" name="harga" class="form-control" required>
+               <input type="number" name="harga" class="form-control" min="0" required>
             </div>
 
             <div class="mb-3">

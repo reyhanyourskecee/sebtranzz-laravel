@@ -16,12 +16,12 @@
 
         <div class="mb-3">
             <label for="stok" class="form-label">Stok</label>
-            <input type="number" name="stok" id="stok" class="form-control" value="{{ $bahanbaku->stok }}" required>
+            <input type="number" name="stok" id="stok" class="form-control" min="0" value="{{ $bahanbaku->stok }}" required>
         </div>
 
         <div class="mb-3">
             <label for="harga" class="form-label">Harga</label>
-            <input type="number" name="harga" id="harga" class="form-control" value="{{ $bahanbaku->harga }}" required>
+            <input type="number" name="harga" id="harga" class="form-control" min="0" value="{{ $bahanbaku->harga }}" required>
         </div>
 
         <div class="mb-3">
